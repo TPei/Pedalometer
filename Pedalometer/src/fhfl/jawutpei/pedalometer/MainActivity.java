@@ -38,7 +38,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private final int REQUEST_ENABLE_BT = 10;
 	
 	private TextView deviceListView;
-	private ArrayAdapter<BluetoothDevice> deviceAdapter;
 	private ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
 	
 	private TextView sensorData;
@@ -51,9 +50,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME); 
+        
         deviceListView = (TextView) (findViewById(R.id.deviceList));
-        //deviceAdapter = new ArrayAdapter<BluetoothDevice>(this, R.layout.activity_main, deviceList);
-        //deviceListView.setAdapter(deviceAdapter);
         
         sensorData = (TextView)(findViewById(R.id.sensordata));
         
@@ -143,6 +141,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		{
 		    for (BluetoothDevice device : pairedDevices)
 		    {
+		    	
 		    	deviceList.add(device);
 		    	deviceListView.setText(deviceListView.getText() + "\n" + device.getName());
 		    	Log.v(TAG, "showPairedDevices(): paired device found: " + device.getName());
@@ -166,9 +165,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		        if (BluetoothDevice.ACTION_FOUND.equals(action)) 
 		        {
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-		            // Add the name and address to an array adapter to show in a ListView
+		        
 		            deviceList.add(device);
-		            //deviceAdapter.notifyDataSetChanged();
 		            deviceListView.setText(deviceListView.getText() + "\n" + device.getName());
 		            Log.v(TAG, "discoverDevices(): device found: " + device.getName());
 		        }
