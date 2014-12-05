@@ -42,14 +42,23 @@ public class BTSocketReader extends Thread
     {
     	Log.v(TAG, "run(): SocketCommunicator gestartet");
         byte[] buffer = new byte[1024];
+        String messageBuffer = "";
         int bytes;
         while (true) 
         {
             try 
             {
                 bytes = inStream.read(buffer);
-                Log.v(TAG, "run(): Daten empfangen");
-                model.addRawData(buffer, bytes);
+                String message = new String(buffer, 0, bytes);
+                if (messageBuffer.length() != 0)
+                {
+                	message = messageBuffer + message;
+                	messageBuffer = "";
+                }
+                String newData = message.substring(0, message.indexOf("]")+1);
+                messageBuffer = message.substring(message.indexOf("]")+1);
+                newData = newData.substring(1, newData.length()-1);
+                model.addRawData(newData);
                 //invalidate view here when view is implemented
 
             } 

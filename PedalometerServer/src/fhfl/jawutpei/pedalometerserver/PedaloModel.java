@@ -11,13 +11,15 @@ import android.util.Log;
 public class PedaloModel 
 {
 	private static final String TAG = "fhfl.jawutpei.pedalometerServer.PedaloModel";
-	private ArrayList<double[]> rawData;
-	private ArrayList<double[]> proData;
+	//enthält die Rohdaten mit Timestamps
+	private ArrayList<SensorData> rawData;
+	//alle 2 Sekunden wird hier die aktuelle Umdrehungszahl hinzugefügt
+	private ArrayList<Double> proData;
 	
 	public PedaloModel()
 	{
-		this.rawData = new ArrayList<double[]>();
-		this.proData = new ArrayList<double[]>();
+		this.rawData = new ArrayList<SensorData>();
+		this.proData = new ArrayList<Double>();
 	}
 	
 	/**
@@ -25,13 +27,12 @@ public class PedaloModel
 	 * @param raw Byte-Array mit der übermittelten Nachricht
 	 * @param len Länge der empfangenen Nachricht
 	 */
-	public void addRawData(byte[] raw, int len)
+	public void addRawData(String dataString)
 	{	
-		//Byte-Array in String umwandeln
-		String data = new String(raw, 0, len);
-		String[] values = data.split(";");
-		double[] datas = {Double.parseDouble(values[0]), Double.parseDouble(values[1]), Double.parseDouble(values[2]), System.currentTimeMillis()};
-		rawData.add(datas);
+		String dataStrings[] = dataString.split(";");
+		float[] data = {Float.parseFloat(dataStrings[0]), Float.parseFloat(dataStrings[1]), Float.parseFloat(dataStrings[2])};
+		rawData.add(new SensorData(data[0], data[1], data[2]));
+		//neue Umdrehungszahl berechnen
 		processData();
 	}
 	
@@ -39,7 +40,7 @@ public class PedaloModel
 	 * Getter
 	 * @return proData
 	 */
-	public ArrayList<double[]> getData()
+	public ArrayList<Double> getData()
 	{
 		return proData;
 	}
@@ -58,6 +59,49 @@ public class PedaloModel
 	 */
 	private void processData()
 	{
-		//calculate U/min from rawData and add to proData
+		if (rawData.size() > 1000)
+		{
+			int index = rawData.size()-1;
+			long lastTimeStamp = rawData.get(index).timestamp;
+			long timeDiff = 0;
+			boolean directionUp = true;
+			int count = 0;
+			while (timeDiff < 2000)
+			{
+				double currentY = rawData.get(index).y - 9.81f;
+				index--;
+				double lastY	 = rawData.get(index).y - 9.81f;				
+				timeDiff = lastTimeStamp - rawData.get(index).timestamp;
+				
+				if ((currentY < lastY && directionUp) || (currentY > lastY && !directionUp))
+				{
+					directionUp = !directionUp;
+					count++;
+				}
+			}
+			double result = (double)(count/2.0) * 30.0;
+			proData.add(result);
+			Log.v(TAG, "processData(): " + result + " U/min");
+		}
+	}
+	
+	/**
+	 * Innere Klasse zum Speichern der Sensordaten zusammen mit einem Timestamp
+	 *
+	 */
+	private class SensorData
+	{
+		public float x;
+		public float y;
+		public float z;
+		public long timestamp;
+		
+		public SensorData(float x, float y, float z)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.timestamp = System.currentTimeMillis();
+		}
 	}
 }

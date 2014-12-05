@@ -1,5 +1,6 @@
 package fhfl.jawutpei.pedalometer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import android.app.Activity;
@@ -39,6 +40,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 	private TextView deviceListView;
 	private ArrayAdapter<BluetoothDevice> deviceAdapter;
 	private ArrayList<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
+	
+	private TextView sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         deviceListView = (TextView) (findViewById(R.id.deviceList));
         //deviceAdapter = new ArrayAdapter<BluetoothDevice>(this, R.layout.activity_main, deviceList);
         //deviceListView.setAdapter(deviceAdapter);
+        
+        sensorData = (TextView)(findViewById(R.id.sensordata));
         
         initializeBT();
     }
@@ -73,11 +78,19 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		String values = "" + event.values[0] + ";" + event.values[1] + ";" + event.values[2];
+		String values = "[" + event.values[0] + ";" + event.values[1] + ";" + event.values[2] + "]";
 		//wenn Verbindung zum Server besteht, sende Daten an diesen
+		sensorData.setText("" + 5* (event.values[1] - 9.81f));
 		if (btSocket != null)
 		{
-			new BTSocketWriter(btSocket, values).start();
+			//new BTSocketWriter(btSocket, values).start();
+			try 
+			{
+				btSocket.getOutputStream().write(values.getBytes());
+				btSocket.getOutputStream().flush();
+			} catch (IOException e) 
+			{
+			}
 		}
 	}
 
@@ -171,6 +184,21 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.v(TAG, "connectToServer(): ");
 		btAdapter.cancelDiscovery();
 		new BTSocketConnector(deviceList.get(0), this).start();
+	}
+	
+	public void diconnect(View view)
+	{
+		if (btSocket != null)
+		{
+			try 
+			{
+				btSocket.close();
+				btSocket = null;
+			} 
+			catch (IOException e) 
+			{
+			}
+		}		
 	}
 	
 	public void setSocket(BluetoothSocket socket)
