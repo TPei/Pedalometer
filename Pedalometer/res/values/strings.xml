@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pedalometer</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="noBluetooth">Dieses Gerät unterstützt kein Bluetooth!</string>
+    <string name="needBluetooth">Diese App benötigt Bluetooth!</string>
+    
+    <string name="pairedDevicesFinish">Alle gepaarten Geräte werden angezeigt</string>
+    <string name="discoverDevices">Suche nach Geräten gestartet</string>
+    
+
+</resources>
