@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 /**
  * Sehr einfache Threadklasse zum Lesen vom BluetoothSocket
@@ -16,12 +17,14 @@ import android.bluetooth.BluetoothSocket;
  */
 public class BTSocketCommunicator extends Thread
 {
-    private final InputStream inStream;
-    
+	private static final String TAG = "fhfl.jawutpei.pedalometerServer.BTSocketCommunicator";
+    private final InputStream inStream;    
     private final PedaloModel model;
     private final PedaloView view;
     
-    public BTSocketCommunicator (BluetoothSocket socket, PedaloModel model, PedaloView view) {
+    public BTSocketCommunicator (BluetoothSocket socket, PedaloModel model, PedaloView view) 
+    {
+    	Log.v(TAG, "Konstruktor(): ");
         this.model = model;
         this.view = view;
         InputStream tmpIn = null;
@@ -37,6 +40,7 @@ public class BTSocketCommunicator extends Thread
     
     public void run() 
     {
+    	Log.v(TAG, "run(): SocketCommunicator gestartet");
         byte[] buffer = new byte[1024];
         int bytes;
         while (true) 
@@ -44,6 +48,7 @@ public class BTSocketCommunicator extends Thread
             try 
             {
                 bytes = inStream.read(buffer);
+                Log.v(TAG, "run(): Daten empfangen");
                 model.addRawData(buffer, bytes);
                 //invalidate view here when view is implemented
 

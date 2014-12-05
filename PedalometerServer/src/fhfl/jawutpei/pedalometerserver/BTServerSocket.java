@@ -46,7 +46,7 @@ public class BTServerSocket extends Thread
             // If a connection was accepted
             if (socket != null) 
             {
-            	Log.v(TAG, "run(): Connectedt to client");
+            	Log.v(TAG, "run(): Connected to client");
                 activity.setSocket(socket);
                 try 
                 {

@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        model = new PedaloModel();
         view = new PedaloView();
         
         initializeBT();
@@ -81,14 +80,15 @@ public class MainActivity extends Activity {
 		}
 		else
 		{
-			//meldung das gerät erreichbar ist
-			//startBTServer();
+			Log.v(TAG, "onActivityResult(): Gerät ist sichtbar");
+			new BTServerSocket(btAdapter, this).start();
 		}
 
 	}	
 
     protected void setSocket(BluetoothSocket socket)
     {
+    	Log.v(TAG, "setSocket(): ");
     	btSocket = socket;
     	new BTSocketCommunicator(btSocket, model, view).start();
     }

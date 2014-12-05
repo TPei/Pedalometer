@@ -2,12 +2,15 @@ package fhfl.jawutpei.pedalometerserver;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 /**
  * Model-Klasse zum Speichern und Verarbeiten von Daten des Beschleunigungssensors
  *
  */
 public class PedaloModel 
 {
+	private static final String TAG = "fhfl.jawutpei.pedalometerServer.PedaloModel";
 	private ArrayList<double[]> rawData;
 	private ArrayList<double[]> proData;
 	
@@ -24,7 +27,9 @@ public class PedaloModel
 	 */
 	public void addRawData(byte[] raw, int len)
 	{	
-		//process rawData
+		//Byte-Array in String umwandeln
+		String data = new String(raw, 0, len);
+		Log.v(TAG, "addRawData(): empfangen: " + data);
 		//double[] data = {xCord, yCord, zCord};
 		//rawData.add(data);
 		processData();
