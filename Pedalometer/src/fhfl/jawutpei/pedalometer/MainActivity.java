@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,9 +73,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		String values = "x:" + event.values[0] + " y: " + event.values[1] + " z: " + event.values[2];
-		//Log.v(TAG, "onSensorChange(): " + values);
-		//Toast.makeText(this, values, Toast.LENGTH_SHORT).show();
+		String values = "" + event.values[0] + ";" + event.values[1] + ";" + event.values[2];
+		//wenn Verbindung zum Server besteht, sende Daten an diesen
+		if (btSocket != null)
+		{
+			new BTSocketWriter(btSocket, values).start();
+		}
 	}
 
 	@Override
@@ -162,11 +166,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 		registerReceiver(bReceiver, filter); 
 	}
 	
-	private void connectToServer(BluetoothDevice device)
+	public void connectToServer(View view)
 	{
 		Log.v(TAG, "connectToServer(): ");
 		btAdapter.cancelDiscovery();
-		new BTSocketConnector(device, this).start();
+		new BTSocketConnector(deviceList.get(0), this).start();
 	}
 	
 	public void setSocket(BluetoothSocket socket)
@@ -174,7 +178,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 		Log.v(TAG, "setSocket(): ");
 		btSocket = socket;
 	}
-	
 		
 	private void sendData(float[] sensorData)
 	{

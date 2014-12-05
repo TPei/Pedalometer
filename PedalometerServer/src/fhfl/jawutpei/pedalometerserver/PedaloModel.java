@@ -29,9 +29,9 @@ public class PedaloModel
 	{	
 		//Byte-Array in String umwandeln
 		String data = new String(raw, 0, len);
-		Log.v(TAG, "addRawData(): empfangen: " + data);
-		//double[] data = {xCord, yCord, zCord};
-		//rawData.add(data);
+		String[] values = data.split(";");
+		double[] datas = {Double.parseDouble(values[0]), Double.parseDouble(values[1]), Double.parseDouble(values[2]), System.currentTimeMillis()};
+		rawData.add(datas);
 		processData();
 	}
 	

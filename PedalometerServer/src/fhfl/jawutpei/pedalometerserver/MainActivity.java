@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        model = new PedaloModel();
         view = new PedaloView();
         
         initializeBT();
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
     	Log.v(TAG, "makeDiscoverable(): ");
     	Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
     	startActivity(discoverableIntent);
+    	new BTServerSocket(btAdapter, this).start();
     }
 
     @Override
@@ -81,7 +83,6 @@ public class MainActivity extends Activity {
 		else
 		{
 			Log.v(TAG, "onActivityResult(): Gerät ist sichtbar");
-			new BTServerSocket(btAdapter, this).start();
 		}
 
 	}	
@@ -90,7 +91,7 @@ public class MainActivity extends Activity {
     {
     	Log.v(TAG, "setSocket(): ");
     	btSocket = socket;
-    	new BTSocketCommunicator(btSocket, model, view).start();
+    	new BTSocketReader(btSocket, model, view).start();
     }
 
 }
