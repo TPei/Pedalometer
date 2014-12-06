@@ -2,16 +2,19 @@ package fhfl.jawutpei.pedalometer;
 
 import java.io.IOException;
 import java.util.UUID;
-
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+/**
+ * Klasse zum Erstellen und Verbinden eines Bluetooth-Sockets mit übergebenen Gerät
+ * Läuft in eigenem Thread, da zeitintensiv und bei Fehler bis zu einem Timeout gewartet wird
+ *
+ */
 public class BTSocketConnector extends Thread
 {
 	private static final String TAG = "fhfl.jawutpei.pedalometer.BTSocketConnector";
 	private final BluetoothSocket btSocket;
-    private final BluetoothDevice btDevice;
     private final UUID uuid = new UUID(123, 123);
     private MainActivity activity;
  
@@ -19,7 +22,6 @@ public class BTSocketConnector extends Thread
     {
     	Log.v(TAG, "Konstruktor(): ");
         BluetoothSocket tmp = null;
-        btDevice = device;
         this.activity = activity;
  
         try 
@@ -28,7 +30,7 @@ public class BTSocketConnector extends Thread
         } 
         catch (IOException e) 
         { 
-        	
+        	Log.e(TAG, "Konstruktor(): error while creating socket");
         }
         btSocket = tmp;
     }
@@ -42,13 +44,14 @@ public class BTSocketConnector extends Thread
         } 
         catch (IOException connectException) 
         {
+        	Log.e(TAG, "run(): error while connecting socket");
             try 
             {
                 btSocket.close();
             } 
             catch (IOException closeException) 
             { 
-            	
+            	Log.e(TAG, "run(): error while closing socket");
             }
             return;
         }

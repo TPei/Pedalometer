@@ -5,11 +5,23 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     
-    <string name="noBluetooth">Dieses Gerät unterstützt kein Bluetooth!</string>
-    <string name="needBluetooth">Diese App benötigt Bluetooth!</string>
+    <string name="noBluetoothToast">Dieses Gerät unterstützt kein Bluetooth!</string>
+    <string name="needBluetoothToast">Diese App benötigt Bluetooth!</string>
     
-    <string name="pairedDevicesFinish">Alle gepaarten Geräte werden angezeigt</string>
-    <string name="discoverDevices">Suche nach Geräten gestartet</string>
+    <string name="discoveredDevicesHeader">Erreichbare Geräte</string>
+    <string name="discoverDevicesToast">Suche nach Geräten gestartet</string>
+    <string name="discoverAgain">Erneut nach Geräten suchen</string>
+    
+    <string name="connect">Mit Gerät verbinden</string>
+    <string name="disconnect">Verbindung beeenden</string>
+    
+    <string name="sendData">Datenübertragung starten</string>
+    <string name="sendNoData">Datenübertragung stoppen</string>
+    
+    <string name="statusNotConnected">Verbindungsstatus: nicht verbunden</string>
+    <string name="statusConnected">Verbindungsstatus: verbunden</string>
+    
+    <string name="notConnectedToast">Es besteht keine Verbindung zum Server</string>
     
 
 </resources>

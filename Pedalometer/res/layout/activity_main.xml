@@ -7,44 +7,62 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="fhfl.jawutpei.pedalometer.MainActivity" >
-
+    
     <TextView
-        android:id="@+id/deviceList"
-        android:layout_width="match_parent"
+        android:id="@+id/deviceListHeader"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" >
-    </TextView>
-
-    <Button
-        android:id="@+id/Connect"
+        android:layout_marginTop="19dp"
+        android:text="@string/discoveredDevicesHeader"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <RadioGroup
+        android:id="@+id/deviceList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/deviceList"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="45dp" 
+        android:layout_below="@+id/deviceListHeader" >
+
+    </RadioGroup>
+    
+    <Button
+        android:id="@+id/connectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
-        android:text="Verbinde zu Server" 
-        android:onClick="connectToServer"/>
-
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/deviceList"
+        android:onClick="connect"
+        android:text="@string/connect" />
+    
     <Button
-        android:id="@+id/Disconnect"
+        android:id="@+id/dataButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Connect"
-        android:layout_alignRight="@+id/Connect"
-        android:layout_below="@+id/Connect"
-        android:onClick="disconnect"
-        android:text="Disconnect" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/connectButton"
+        android:onClick="sendData"
+        android:text="@string/sendData" />
 
     <TextView
-        android:id="@+id/sensordata"
+        android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/deviceList"
-        android:layout_below="@+id/Disconnect"
-        android:layout_marginLeft="31dp"
-        android:layout_marginTop="101dp"
-        android:text="l" />
+        android:layout_below="@+id/dataButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/statusNotConnected" />
 
+    <Button
+        android:id="@+id/dicoverButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="discoverDevices"
+        android:text="@string/discoverAgain" />
+    
 </RelativeLayout>
