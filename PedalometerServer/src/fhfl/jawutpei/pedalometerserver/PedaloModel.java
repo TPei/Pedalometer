@@ -14,14 +14,14 @@ public class PedaloModel
 	//enthält die Rohdaten mit Timestamps
 	private ArrayList<SensorData> rawData;
 	//alle 2 Sekunden wird hier die aktuelle Umdrehungszahl hinzugefügt
-	private ArrayList<Double> proData;
+	private ArrayList<UMinData> proData;
 	
 	private MainActivity activity;
 	
 	public PedaloModel(MainActivity activity)
 	{
 		this.rawData = new ArrayList<SensorData>();
-		this.proData = new ArrayList<Double>();
+		this.proData = new ArrayList<UMinData>();
 		
 		this.activity = activity;
 	}
@@ -44,7 +44,7 @@ public class PedaloModel
 	 * Getter
 	 * @return proData
 	 */
-	public ArrayList<Double> getData()
+	public ArrayList<UMinData> getData()
 	{
 		return proData;
 	}
@@ -63,29 +63,32 @@ public class PedaloModel
 	 */
 	private void processData()
 	{
-		if (rawData.size() > 1000)
-		{
-			int index = rawData.size()-1;
-			long lastTimeStamp = rawData.get(index).timestamp;
+		final int TIMEWINDOW = 6000;
+		final int PRODATAUPDATERATE = 2000;
+		
+		long currentTimeStamp = System.currentTimeMillis();
+		int index = rawData.size()-1;
+		
+		if ((proData.size() == 0) || (currentTimeStamp - proData.get(proData.size()-1).timestamp >= PRODATAUPDATERATE))
+		{			
 			long timeDiff = 0;
 			boolean positive = true;
-			int count = 0;
-			while ((timeDiff < 10000) && (index > 0))
+			int count = -1;
+			while ((timeDiff < TIMEWINDOW) && (index > 0))
 			{
 				index--;
 				double currentY = rawData.get(index).y - 9.81;				
-				timeDiff = lastTimeStamp - rawData.get(index).timestamp;				
+				timeDiff = currentTimeStamp - rawData.get(index).timestamp;				
 				
-				if ((currentY < 0 && positive) || (currentY > 0 && !positive))
+				if ((currentY < 3 && positive) || (currentY > 3 && !positive))
 				{
 					positive = !positive;
 					count++;
 				}
 			}
-			if (count == 1)
-				count = 0;
-			double result = ((double)count / 2.0) * 6.0;
-			proData.add(result);
+
+			double result = ((double)count / 2.0) * (60000.0 / TIMEWINDOW);
+			proData.add(new UMinData(result));
 			Log.v(TAG, "processData(): " + result + " U/min");
 			activity.updateUMin(String.valueOf(result));
 		}
@@ -107,6 +110,22 @@ public class PedaloModel
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.timestamp = System.currentTimeMillis();
+		}
+	}
+	
+	/**
+	 * Innere Klasse zum Speichern der Umdrehungsgeschwindigkeit zusammen mit einem Timestamp
+	 *
+	 */
+	private class UMinData
+	{
+		public double uMin;
+		public long timestamp;
+		
+		public UMinData(double uMin)
+		{
+			this.uMin = uMin;
 			this.timestamp = System.currentTimeMillis();
 		}
 	}

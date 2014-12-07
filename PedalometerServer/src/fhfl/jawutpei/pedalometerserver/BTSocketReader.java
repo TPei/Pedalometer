@@ -9,7 +9,7 @@ import android.util.Log;
 /**
  * Sehr einfache Threadklasse zum Lesen vom BluetoothSocket
  * 
- * Empfangene Daten werden im Rohformat an die Model-Klasse übergeben
+ * Empfangene Daten werden als String an die Model-Klasse übergeben
  * Die Referenz zur View wird zum Invalidaten dieser gebraucht
  * 
  * Vieles direkt von http://developer.android.com/guide/topics/connectivity/bluetooth.html übernommen
@@ -38,6 +38,11 @@ public class BTSocketReader extends Thread
         inStream = tmpIn;
     }
     
+    /**
+     * liest in Endlosschleife Daten vom Socket
+     * holt Werttupel [x;y;z] aus empfangenen String heraus und gibt diese einzeln an das Model weiter
+     * 
+     */
     public void run() 
     {
     	Log.v(TAG, "run(): SocketCommunicator gestartet");
@@ -53,14 +58,27 @@ public class BTSocketReader extends Thread
                 Log.v(TAG, "run(): Empfagen: " + message);
                 if (messageBuffer.length() != 0)
                 {
-                	//Log.v(TAG, "run(): messageBuffer used because of to much data: " + messageBuffer);
                 	message = messageBuffer + message;
                 	messageBuffer = "";
                 }
-                String newData = message.substring(0, message.indexOf("]")+1);
-                messageBuffer = message.substring(message.indexOf("]")+1);
-                newData = newData.substring(1, newData.length()-1);
-                model.addRawData(newData);
+                boolean moreData = false;
+                do
+                {
+                	String newData = message.substring(0, message.indexOf("]")+1);
+                    model.addRawData(newData.substring(1, newData.length()-1));
+                    message = message.substring(message.indexOf("]")+1);
+                    if (message.contains("]"))
+                    {
+                    	moreData = true;
+                    }         
+                    else
+                    {
+                    	moreData = false;
+                    }
+                } while(moreData);
+                
+                messageBuffer = message;
+
                 //invalidate view here when view is implemented
 
             } 

@@ -56,6 +56,11 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initialisiert Bluetooth
+     * -holt sich Referenz auf Bluetooth-Adapter, falls vorhanden
+     * -sartet makeDiscoverable()
+     */
     private void initializeBT() 
 	{
 		Log.v(TAG, "initializeBT(): ");
@@ -68,7 +73,10 @@ public class MainActivity extends Activity {
 		}
 		makeDiscoverable();
 	}
-    	
+    
+    /**
+     * Macht das Gerät für 120 Sekunden sichtbar und startet Bluetooth-Server-Socket
+     */
     private void makeDiscoverable()
     {
     	Log.v(TAG, "makeDiscoverable(): ");
@@ -77,11 +85,18 @@ public class MainActivity extends Activity {
     	new BTServerSocket(btAdapter, this).start();
     }
     
+    /**
+     * Überladene Methode für Aufruf über die View
+     * @param view
+     */
     public void makeDiscoverable(View view)
     {
     	makeDiscoverable();
     }
 
+    /**
+     * Reagiert auf ActivityResults von BT-Intends
+     */
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -95,9 +110,13 @@ public class MainActivity extends Activity {
 		{
 			Log.v(TAG, "onActivityResult(): Gerät ist sichtbar");
 		}
-
 	}	
 
+    /**
+     * Setzt die Referenz zum Bluetooth-Socket
+     * wird vom ServerSocket-Thread aufgerufen
+     * @param socket
+     */
     protected void setSocket(BluetoothSocket socket)
     {
     	Log.v(TAG, "setSocket(): ");
@@ -105,6 +124,10 @@ public class MainActivity extends Activity {
     	new BTSocketReader(btSocket, model, view).start();
     }
     
+    /**
+     * zeigt die aktuelle Umdrehungszahl in der View an
+     * @param value Umdrehungszahl, die angezeigt werden soll
+     */
     protected void updateUMin(final String value)
     {
     	runOnUiThread(new Runnable() {
