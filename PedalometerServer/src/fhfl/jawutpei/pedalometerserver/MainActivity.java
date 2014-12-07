@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -19,14 +21,18 @@ public class MainActivity extends Activity {
 	private BluetoothSocket btSocket = null;
 	private PedaloModel model = null;
 	private PedaloView view = null;
+	
+	private TextView uMinView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        model = new PedaloModel();
+        model = new PedaloModel(this);
         view = new PedaloView();
+        
+        uMinView = (TextView) (findViewById(R.id.u_min));
         
         initializeBT();
     }
@@ -70,6 +76,11 @@ public class MainActivity extends Activity {
     	startActivity(discoverableIntent);
     	new BTServerSocket(btAdapter, this).start();
     }
+    
+    public void makeDiscoverable(View view)
+    {
+    	makeDiscoverable();
+    }
 
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -92,6 +103,17 @@ public class MainActivity extends Activity {
     	Log.v(TAG, "setSocket(): ");
     	btSocket = socket;
     	new BTSocketReader(btSocket, model, view).start();
+    }
+    
+    protected void updateUMin(final String value)
+    {
+    	runOnUiThread(new Runnable() {
+		    @Override
+		    public void run() {
+		    	uMinView.setText(value + "U/Min");
+		    }
+		  });
+    	
     }
 
 }

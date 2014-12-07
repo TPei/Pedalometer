@@ -16,10 +16,14 @@ public class PedaloModel
 	//alle 2 Sekunden wird hier die aktuelle Umdrehungszahl hinzugefügt
 	private ArrayList<Double> proData;
 	
-	public PedaloModel()
+	private MainActivity activity;
+	
+	public PedaloModel(MainActivity activity)
 	{
 		this.rawData = new ArrayList<SensorData>();
 		this.proData = new ArrayList<Double>();
+		
+		this.activity = activity;
 	}
 	
 	/**
@@ -64,24 +68,26 @@ public class PedaloModel
 			int index = rawData.size()-1;
 			long lastTimeStamp = rawData.get(index).timestamp;
 			long timeDiff = 0;
-			boolean directionUp = true;
+			boolean positive = true;
 			int count = 0;
-			while (timeDiff < 2000)
+			while ((timeDiff < 10000) && (index > 0))
 			{
-				double currentY = rawData.get(index).y - 9.81f;
 				index--;
-				double lastY	 = rawData.get(index).y - 9.81f;				
-				timeDiff = lastTimeStamp - rawData.get(index).timestamp;
+				double currentY = rawData.get(index).y - 9.81;				
+				timeDiff = lastTimeStamp - rawData.get(index).timestamp;				
 				
-				if ((currentY < lastY && directionUp) || (currentY > lastY && !directionUp))
+				if ((currentY < 0 && positive) || (currentY > 0 && !positive))
 				{
-					directionUp = !directionUp;
+					positive = !positive;
 					count++;
 				}
 			}
-			double result = (double)(count/2.0) * 30.0;
+			if (count == 1)
+				count = 0;
+			double result = ((double)count / 2.0) * 6.0;
 			proData.add(result);
 			Log.v(TAG, "processData(): " + result + " U/min");
+			activity.updateUMin(String.valueOf(result));
 		}
 	}
 	

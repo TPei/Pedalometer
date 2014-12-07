@@ -50,8 +50,10 @@ public class BTSocketReader extends Thread
             {
                 bytes = inStream.read(buffer);
                 String message = new String(buffer, 0, bytes);
+                Log.v(TAG, "run(): Empfagen: " + message);
                 if (messageBuffer.length() != 0)
                 {
+                	//Log.v(TAG, "run(): messageBuffer used because of to much data: " + messageBuffer);
                 	message = messageBuffer + message;
                 	messageBuffer = "";
                 }

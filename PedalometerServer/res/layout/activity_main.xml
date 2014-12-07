@@ -9,8 +9,22 @@
     tools:context="fhfl.jawutpei.pedalometerserver.MainActivity" >
 
     <TextView
+        android:id="@+id/u_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text=" U/min" />
+
+    <Button
+        android:id="@+id/discoverableButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/u_min"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:onClick="makeDiscoverable"
+        android:text="@string/discoverString" />
 
 </RelativeLayout>
