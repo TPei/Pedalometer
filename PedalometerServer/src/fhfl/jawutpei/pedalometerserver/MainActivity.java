@@ -30,7 +30,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         model = new PedaloModel(this);
-        view = new PedaloView();
+        //view = new PedaloView(this.getApplicationContext());
+        //view.init(model);
+        
+        view = (PedaloView) findViewById(R.id.pedaloview);
+        view.init(model);
         
         uMinView = (TextView) (findViewById(R.id.u_min));
         
