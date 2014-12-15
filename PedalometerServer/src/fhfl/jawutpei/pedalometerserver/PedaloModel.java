@@ -1,6 +1,7 @@
 package fhfl.jawutpei.pedalometerserver;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 import android.util.Log;
 
@@ -8,7 +9,7 @@ import android.util.Log;
  * Model-Klasse zum Speichern und Verarbeiten von Daten des Beschleunigungssensors
  *
  */
-public class PedaloModel 
+public class PedaloModel extends Observable
 {
 	private static final String TAG = "fhfl.jawutpei.pedalometerServer.PedaloModel";
 	//enthält die Rohdaten mit Timestamps
@@ -91,6 +92,7 @@ public class PedaloModel
 			double result = ((double)count / 2.0) * (60000.0 / TIMEWINDOW);
 			//proData.add(new UMinData(result));
 			proData.add(result);
+			this.notifyObservers();
 			this.timestamp = System.currentTimeMillis();
 			Log.v(TAG, "processData(): " + result + " U/min");
 			activity.updateUMin(String.valueOf(result));

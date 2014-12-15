@@ -2,6 +2,8 @@ package fhfl.jawutpei.pedalometerserver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -41,29 +43,15 @@ public class PedaloView extends View {
 	}
 	
 	public void init(PedaloModel model){
-		/* 
-		 * some dummy coordinates 
-		 */
-		// ------------------------------ //
-		// ------------------------------ //
-		// ------------------------------ //
+		model.addObserver(new Observer() {
+			@Override
+			public void update(Observable observable, Object data) {
+				postInvalidate();
+			}
+		});
 		
-		//yCoords = model.getData();
-		/*
 		yCoords = new ArrayList<Double>();
 		
-		
-		
-		int length = 1000000;
-		int maxVal = (int)(Math.random()*100);
-		for(int i = 0; i < length; i++){
-			yCoords.add(Math.random()*maxVal);
-		}
-		
-		*/
-		// ------------------------------ //
-		// ------------------------------ //
-		// ------------------------------ //
 		
 		this.model = model;
 		
@@ -105,9 +93,16 @@ public class PedaloView extends View {
 		int height = this.getHeight();
 		
 		Rect backGround = new Rect();
-		backGround.right = this.getWidth();
-		backGround.bottom = this.getHeight();
+		backGround.right = width;
+		backGround.bottom = height;
+		
 		canvas.drawRect(backGround, backgroundColor);
+		canvas.drawRect(1f, 0f, 5f, (float)(height-1), paintingColor);
+		canvas.drawRect(0f, (float)(height-5), (float)width, (float)(height-1), paintingColor);
+		
+		// subtract axis lines
+		width = width - 5;
+		height = height - 5;
 		
 		// calculate relative size of graphs by 
 		double yMax = Integer.MIN_VALUE;
@@ -122,7 +117,6 @@ public class PedaloView extends View {
 			}
 		}
 		
-		System.out.println(yMax);
 		
 		double xRatio = width / (double)yCoords.size();
 		double yRatio = height / (double)(yMax+5);
