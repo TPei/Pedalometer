@@ -224,7 +224,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 			int selectedDevice = deviceListRadio.getCheckedRadioButtonId();
 			Log.v(TAG, "connect(): DeviceList-ID: " + selectedDevice);
 			if (selectedDevice != -1)
-				new BTSocketConnector(deviceList.get(0), this).start();
+				new BTSocketConnector(deviceList.get(selectedDevice), this).start();
 			else
 				Toast.makeText(this, "Kein Gerät ausgewählt", Toast.LENGTH_SHORT).show();
 		}

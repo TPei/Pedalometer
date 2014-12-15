@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
         //view.init(model);
         
         view = (PedaloView) findViewById(R.id.pedaloview);
-        view.init(model);
         
         uMinView = (TextView) (findViewById(R.id.u_min));
         
@@ -87,6 +86,7 @@ public class MainActivity extends Activity {
     	Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
     	startActivity(discoverableIntent);
     	new BTServerSocket(btAdapter, this).start();
+    	view.init(model);
     }
     
     /**
