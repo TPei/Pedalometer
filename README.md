@@ -1,6 +1,8 @@
 # Pedalometer Android App
 Visualizes the rotational speed of a bicycle pedal, by attaching an Android device to the ankle of a cyclist, which connects to a second device funcitoning as server and display. 
 
+This app was built in the class "Mobile Computing" at the Flensburg University of Applied Sciences. 
+
 ## Pedalometer Client
 Can connect to Pedalometer Server using Bluetooth. Will then live-transmit xyz raw values from the accelerometer to the server.
 
